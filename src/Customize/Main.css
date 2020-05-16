@@ -1,0 +1,7 @@
+.swatch-container {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-evenly;
+    text-align: center;
+}

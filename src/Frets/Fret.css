@@ -1,0 +1,9 @@
+.Fret {
+    height: 300px;
+    width: 5px;
+    background-color: white;
+    position: relative;
+    bottom: 290px;
+    z-index: 99;
+}
+
