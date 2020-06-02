@@ -1,18 +1,25 @@
 import React, { Component } from 'react'
 import Note from '../Notes/Note'
 import * as Tone from "tone";
-
+import SampleLibrary from '../Libraries/tonejs-instruments/Tonejs-Instruments'
 import './String.css'
-
-
 
 class String extends Component {
 
   constructor(props) {
     super(props)
-    this.synth = new Tone.Synth().toMaster();
+    // console.log(props.noteInfo[0].link)
+    // this.sampler = new Tone.Sampler(
+    //   { A2 },
+    //   {
+    //     onload: () => {
+    //       this.setState({ isLoaded: true });
+    //     }
+    //   }
+    // ).toMaster();
     this.arrangedNotes = [];
     this.state = {
+      isLoaded: false,
       noteBank: ['A','A#',
                   'B',
                   'C', 'C#',
@@ -25,7 +32,7 @@ class String extends Component {
 
   componentWillMount() {
     let noteBankCopy = [...this.state.noteBank]
-    let noteStartingIndex = this.state.noteBank.indexOf(this.props.stringInfo.name) // EX: ('E' : 7)
+    let noteStartingIndex = this.state.noteBank.indexOf(this.props.data.name) // EX: ('E' : 7)
     let noteEndingIndex = this.state.noteBank.length // EX: 12
   
     this.arrangedNotes = noteBankCopy.splice(noteStartingIndex, noteEndingIndex - noteStartingIndex)
@@ -34,36 +41,42 @@ class String extends Component {
   }
 
   playNote(note) {
-    this.synth.triggerAttackRelease(`${note}2`, "8n");
+    // this.sampler.triggerAttack("A2");
   }
 
   render() {
-    let tone = this.props.stringInfo.tone
     let notes = []
     this.arrangedNotes.map((note, index) => {
-      let color = "lightgreen"
-      let hideSharps = true;
-      let hideTones = true
+      let color;
 
       this.props.noteInfo.map((n) => {
         if (n.name == note) {
           color = `rgba(${ n.color.r }, ${ n.color.g }, ${ n.color.b }, ${ n.color.a })`
         }
       })
+      let show = false;
 
-      if (note.includes('#')) {
-        hideSharps = this.props.stringInfo.hideSharps;
+      if (this.props.showTriad) {
+        this.props.triadInfo.map((e) => {
+          if (e.selected) {
+            if (e.Notes.includes(note)) {
+              show = true;
+            }
+            if (e.Root === note) {
+            color = `#49392E`
+            }
+          }
+        })
+      } else if(this.props.hideSharps) {
+        if (!note.includes('#')) {
+          show = true;
+        }
+      } else {
+        show = true;
       }
-      if (this.props.stringInfo.toggleTone) {
-        hideTones = this.props.stringInfo.hideTones
-      }
+     
 
-
-      if (note == 'C') {
-        tone ++;
-      }
-      
-      notes.push(<Note color={color} show={hideSharps} tone={this.props.stringInfo.hideTones ? null : tone} item={note} key={index} click={() => this.playNote(note)}/>)
+      notes.push(<Note color={color} show={show} note={note} key={index} click={() => this.playNote(note)}/>)
     })
 
     return (

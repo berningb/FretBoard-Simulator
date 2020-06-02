@@ -1,31 +1,29 @@
-{ 
+
+import A2 from '../Libraries/tonejs-instruments/samples/guitar-electric/A2.mp3'
+//TODO: finish inporting all sounds to continue the data flow
+let fakeData = { 
     "stringInfo": [{
-        "name" : "E",
-        "tone" : 4
+        "name" : "E"
         },
         {
-            "name" : "B",
-            "tone" : 3
+            "name" : "B"
         },
         {
-            "name" : "G",
-            "tone" : 3
+            "name" : "G"
         },
         {
-            "name" : "D",
-            "tone" : 3
+            "name" : "D"
         },
         {
-            "name" : "A",
-            "tone" : 2
+            "name" : "A"
         },
         {
-            "name" : "E",
-            "tone" : 2
+            "name" : "E"
         }
     ],
     "noteInfo": [{
             "name" : "A",
+            "link" : A2,
             "color" : {
                 "r": 241,
                 "g": 112,
@@ -133,5 +131,25 @@
                 "a": 1
               }
         }
+    ],
+    "triads": [
+        {'Root': 'A',
+         'Notes': ['A', 'C', 'E']}, 
+        {'Root': 'B',
+         'Notes': ['B','D#', 'F#']}, 
+        {'Root': 'C',
+         'Notes': ['C','E', 'G']}, 
+        {'Root': 'D',
+         'Notes': ['D','F#', 'A']}, 
+        {'Root': 'E',
+         'Notes': ['E','G#', 'B']}, 
+        {'Root': 'F',
+         'Notes': ['F','A', 'C']}, 
+        {'Root': 'G',
+         'Notes': ['G','B', 'D']}, 
+
     ]
 }
+
+
+export default fakeData

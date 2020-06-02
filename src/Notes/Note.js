@@ -2,9 +2,10 @@ import React from 'react'
 import './Note.css'
 
 const Note = (props) => {
-    let name = props.tone ? props.item + props.tone :  props.item
+    let name = props.note
+    let show = props.show ? 'show Note' : 'hide Note'
     return (
-        <div className={props.show ? 'show Note' : 'hide Note'} style={{backgroundColor: props.color}} onClick={() => props.click(props.item)} >
+        <div className={show} style={{backgroundColor: props.color}} onClick={() => props.click(props.note)} >
             <span>{name}</span>
         </div>
     );

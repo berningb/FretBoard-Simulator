@@ -6,4 +6,8 @@
     bottom: 290px;
     z-index: 99;
 }
-
+.indicator {
+    position: relative;
+    bottom: -320px;
+    right: 60px;
+}

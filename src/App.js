@@ -1,27 +1,44 @@
 import React, { Component } from 'react';
-import String from './Strings/String'
-import Fret from './Frets/Fret'
 import CustomMain from './Customize/Main'
-import fakeData from './API/fakeData.json'
+import fakeData from './API/fakeData'
+import FretBoard from './FretBoard/FretBoard'
 import './App.css';
+
+
 class App extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      hideSharps: true,
-      hideTones: true,
-      noteInfo: fakeData.noteInfo
+      showTriad: false,
+      hideSharps: false,
+      noteInfo: fakeData.noteInfo,
+      triadInfo: fakeData.triads,
+      value: 'A'
     }
   }
 
   toggleSharps(e) {
     this.setState({hideSharps: !this.state.hideSharps})
   } 
-  
-  toggleTones(e) {
-    this.setState({hideTones: !this.state.hideTones})
+
+  toggleShowTriad(e) {
+    this.setState({showTriad: !this.state.showTriad})
+    this.switchTriads(this.state.value)
+  } 
+
+  switchTriads(note) {
+    let copyTriadInfo = [...this.state.triadInfo]
+    copyTriadInfo.map((ti)=> {
+      ti.selected = false;
+
+      if (ti.Root === note) {
+       ti.selected = true;
+      }
+    })
+    this.setState({triadInfo: copyTriadInfo, value: note})
   }
+
   handleColorChange = (color, note) => {
     let newNoteObj = [...this.state.noteInfo]
     newNoteObj.map((n) => {
@@ -34,18 +51,7 @@ class App extends Component {
   };
 
   render() {
-    let strings = []
-    let frets = []
-
-    for(let i = 0; i < 12; i++) {
-      frets.push(<Fret/>)
-    }
     
-    fakeData.stringInfo.map((data) => {
-      data.hideSharps = this.state.hideSharps
-      data.hideTones = this.state.hideTones
-      strings.push(<String stringInfo={data} noteInfo={this.state.noteInfo} key={data.name}/>)
-    })
 
     return (
       <div className="App">
@@ -62,47 +68,45 @@ class App extends Component {
             </li>
           </ul>
 
-
           <div class="tab-content container" id="pills-tabContent">
+
+            {/* first */}
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-tab">
               <div className="toggle-menu">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="customSwitch1" value={this.state.hideSharps} onClick={() => this.toggleSharps()}/>
-                  <label class="custom-control-label" for="customSwitch1">Hide Sharps</label>
+                  <input type="checkbox" class="custom-control-input" id="customSwitch" value={this.state.hideSharps} checked={this.state.hideSharps} onClick={() => this.toggleSharps()}/>
+                  <label class="custom-control-label" for="customSwitch">Hide Sharps</label>
                 </div>
-
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="customSwitch2" value={this.state.hideTones} onClick={() => this.toggleTones()}/>
-                  <label class="custom-control-label" for="customSwitch2">Hide Tones</label>
+                  <input type="checkbox" class="custom-control-input" id="customSwitch1" value={this.state.showTriad} onClick={(e) => this.toggleShowTriad(e)}/>
+                  <label class="custom-control-label" for="customSwitch1">Show Triads</label>
                 </div>
+           
+              </div>
+
+              <div class={ this.state.showTriad ? "show dropdown": 'hide dropdown'}>
+
+                <select onChange={(e) => this.switchTriads(e.target.value)} value={this.state.value}>
+                {this.state.triadInfo.map(item => (
+                  <option key={'triad' + item.Root} value={item.Root}>
+                    {item.Root}
+                  </option>
+                ))}
+                </select>
               </div>
             </div>
 
 
-
+            {/* second */}
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-tab">
               <CustomMain noteInfo={this.state.noteInfo} handleColorChange={this.handleColorChange}/>
             </div>
-
-
-
-
+            {/* third */}
             <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-tab">
-              
             </div>
           </div>
 
-
-          
-  
-          <div className="Fret-board">
-            <div className="String-container">
-              {strings}
-            </div>
-            <div className='Fret-container'>
-              {frets}
-            </div>
-          </div>
+          <FretBoard noteInfo={this.state.noteInfo} showTriad={this.state.showTriad} triadInfo={this.state.triadInfo} hideSharps={this.state.hideSharps}/>
         </div>
       </div>
     );
